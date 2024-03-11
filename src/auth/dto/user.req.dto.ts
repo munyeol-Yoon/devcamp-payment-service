@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { Role } from '../entities/user.entity';
 
 export class UserReqDto {
@@ -6,7 +6,7 @@ export class UserReqDto {
   @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 
