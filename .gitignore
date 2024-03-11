@@ -363,3 +363,5 @@ $RECYCLE.BIN/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+/data
