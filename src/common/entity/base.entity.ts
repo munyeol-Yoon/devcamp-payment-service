@@ -1,17 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export abstract class BaseEntity {
+export abstract class BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'timestamp',
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({
-    type: 'timestamp',
-  })
+  @CreateDateColumn()
   updatedAt: Date;
 }

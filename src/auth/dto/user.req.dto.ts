@@ -24,6 +24,5 @@ export class UserReqDto {
   @IsNotEmpty()
   address: string;
 
-  @IsString()
   role?: Role;
 }

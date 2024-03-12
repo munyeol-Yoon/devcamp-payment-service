@@ -1,12 +1,13 @@
-import { BaseEntity, Column, Entity } from 'typeorm';
+import { BaseModel } from 'src/common/entity/base.entity';
+import { Column, Entity } from 'typeorm';
 
 export enum Role {
   admin = 'Admin',
   user = 'User,',
 }
 
-@Entity()
-export class User extends BaseEntity {
+@Entity('user')
+export class UserModel extends BaseModel {
   @Column({
     type: 'varchar',
     length: 30,
