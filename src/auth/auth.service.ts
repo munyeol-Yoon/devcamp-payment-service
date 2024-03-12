@@ -34,7 +34,7 @@ export class AuthService {
     }
 
     // 비밀번호 일치여부 확인
-    // await this.checkPassword(user.password, dto.password);
+    await this.checkPassword(user.password, dto.password);
 
     // 토큰 발급
     const payload = this.createTokenPayload(user.id);
