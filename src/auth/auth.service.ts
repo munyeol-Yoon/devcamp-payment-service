@@ -26,16 +26,7 @@ export class AuthService {
       );
     }
 
-    const verifyUser = await argon2.verify(user.password, dto.password);
-
-    if (!verifyUser) {
-      throw new CustomException(
-        'user',
-        '이메일 또는 비밀번호가 일치하지 않습니다.',
-        '이메일 또는 비밀번호가 일치하지 않습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await this.checkPassword(user.password, dto.password);
 
     const payload = this.createTokenPayload(user.id);
 
@@ -78,5 +69,22 @@ export class AuthService {
     });
 
     return token;
+  }
+
+  async checkPassword(
+    password: string,
+    savedPassword: string,
+  ): Promise<boolean> {
+    const verifyUser = await argon2.verify(password, savedPassword);
+    if (!verifyUser) {
+      throw new CustomException(
+        'user',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return verifyUser;
   }
 }
