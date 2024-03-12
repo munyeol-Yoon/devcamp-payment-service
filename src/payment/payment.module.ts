@@ -9,9 +9,12 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from 'src/auth/user.repository';
 import { AuthGuard } from 'src/common/guard/auth.guard';
 import { UserModel } from 'src/auth/entities/user.entity';
+import { IssuedCouponModel } from './entities/IssuedCoupon.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CouponModel, UserModel])],
+  imports: [
+    TypeOrmModule.forFeature([CouponModel, UserModel, IssuedCouponModel]),
+  ],
   controllers: [CouponController],
   providers: [
     CouponService,

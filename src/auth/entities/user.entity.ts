@@ -1,5 +1,6 @@
 import { BaseModel } from 'src/common/entity/base.entity';
-import { Column, Entity } from 'typeorm';
+import { CouponModel } from 'src/payment/entities/coupon.entity';
+import { Column, Entity, OneToMany, Relation } from 'typeorm';
 
 export enum Role {
   admin = 'admin',
@@ -42,4 +43,7 @@ export class UserModel extends BaseModel {
     default: Role.user,
   })
   role: Role;
+
+  @OneToMany(() => UserModel, (user) => user.id)
+  coupon: Relation<CouponModel[]>;
 }
