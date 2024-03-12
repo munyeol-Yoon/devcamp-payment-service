@@ -20,4 +20,8 @@ export class CouponRepository {
   async findByType(type: CouponType): Promise<CouponModel> {
     return await this.repository.findOneBy({ type });
   }
+
+  async findOne(couponId: string): Promise<CouponModel> {
+    return await this.repository.findOneBy({ id: couponId });
+  }
 }
