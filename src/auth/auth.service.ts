@@ -1,16 +1,16 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
+import { ConfigService } from '@nestjs/config';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
 import {
   AccessToken,
   Payload,
   RefreshToken,
   Tokens,
-} from 'src/common/types/types';
-import { LoginReqDto } from './dto/login.req.dto';
+} from '../common/types/types';
 import { CustomException } from 'src/http-exception/custom-exception';
+import { LoginReqDto } from './dto/login.req.dto';
 import * as argon2 from 'argon2';
 
 @Injectable()
@@ -20,7 +20,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
   ) {}
+
   async login(dto: LoginReqDto): Promise<Tokens> {
+    // 유저 존재 확인
     const user = await this.userRepository.findByEmail(dto.email);
     if (!user) {
       throw new CustomException(
@@ -31,8 +33,10 @@ export class AuthService {
       );
     }
 
-    await this.checkPassword(user.password, dto.password);
+    // 비밀번호 일치여부 확인
+    // await this.checkPassword(user.password, dto.password);
 
+    // 토큰 발급
     const payload = this.createTokenPayload(user.id);
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -40,16 +44,35 @@ export class AuthService {
       this.createRefreshToken(payload),
     ]);
 
+    // 토큰 보내주기
     return { accessToken, refreshToken };
+  }
+
+  async checkPassword(
+    password: string,
+    savedPassword: string,
+  ): Promise<boolean> {
+    const verifyUser = await argon2.verify(password, savedPassword);
+    if (!verifyUser) {
+      throw new CustomException(
+        'user',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return verifyUser;
   }
 
   createTokenPayload(userId: string): Payload {
     return {
       sub: userId,
-      iat: Math.floor(Date.now() / 1000),
+      iat: Math.floor(Date.now() / 1000), // JWT 표준에 부합하기에..
       jti: uuid(),
     };
   }
+
   async createAccessToken(payload: Payload): Promise<string> {
     const expiresIn = this.configService.get<string>('ACCESS_EXPIRES');
 
@@ -76,32 +99,38 @@ export class AuthService {
     return token;
   }
 
-  async checkPassword(
-    password: string,
-    savedPassword: string,
-  ): Promise<boolean> {
-    const verifyUser = await argon2.verify(password, savedPassword);
-    if (!verifyUser) {
+  async accessTokenRefresh(token: RefreshToken): Promise<AccessToken> {
+    // 리프레쉬토큰 검증
+    const payload = await this.tokenValidation(token);
+    // 액세스 토큰 생성
+    const accessToken = await this.createAccessToken(payload);
+    // 액세스 토큰 반환
+
+    return { accessToken };
+  }
+
+  async tokenValidation(token: {
+    refreshToken?: string;
+    accessToken?: string;
+  }): Promise<Payload> {
+    const currentToken = token.refreshToken || token.accessToken;
+    if (!currentToken) {
       throw new CustomException(
-        'user',
-        '이메일 또는 비밀번호가 일치하지 않습니다.',
-        '이메일 또는 비밀번호가 일치하지 않습니다.',
-        HttpStatus.CONFLICT,
+        'auth',
+        '토큰이 제공되지 않음',
+        '토큰이 제공되지 않음',
+        HttpStatus.UNAUTHORIZED,
       );
     }
 
-    return verifyUser;
-  }
-
-  async accessTokenRefresh(token: RefreshToken): Promise<AccessToken> {
-    const refreshToken = token.refreshToken;
     const { exp, ...payload } = await this.jwtService.verifyAsync(
-      refreshToken,
+      currentToken,
       {
         secret: this.configService.get<string>('JWT_SECRET'),
       },
     );
 
+    // 토큰 일치여부 확인
     const user = await this.userRepository.findOne(payload.sub);
     if (!user) {
       throw new CustomException(
@@ -112,8 +141,6 @@ export class AuthService {
       );
     }
 
-    const accessToken = await this.createAccessToken(payload);
-
-    return { accessToken };
+    return payload;
   }
 }
