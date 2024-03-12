@@ -36,7 +36,7 @@ export class CouponService {
 
   couponClassification(type: CouponType): number {
     if (type === 'fixed') {
-      return 0.5;
+      return 0.3;
     } else if (type === 'percent') {
       return 5000;
     } else {
