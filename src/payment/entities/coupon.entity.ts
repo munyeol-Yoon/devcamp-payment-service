@@ -7,8 +7,7 @@ export enum CouponType {
 
 export class CouponModel extends BaseEntity {
   @Column({
-    type: 'enum',
-    enum: CouponType,
+    type: 'varchar',
   })
   type: CouponType;
 
