@@ -2,8 +2,8 @@ import { BaseModel } from 'src/common/entity/base.entity';
 import { Column, Entity } from 'typeorm';
 
 export enum Role {
-  admin = 'Admin',
-  user = 'User,',
+  admin = 'admin',
+  user = 'user',
 }
 
 @Entity('user')

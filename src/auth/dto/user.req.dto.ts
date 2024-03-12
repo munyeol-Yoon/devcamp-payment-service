@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { Role } from '../entities/user.entity';
 
 export class UserReqDto {
@@ -24,5 +31,8 @@ export class UserReqDto {
   @IsNotEmpty()
   address: string;
 
+  @IsString()
+  @IsOptional()
+  @IsIn(['admin', 'user'])
   role?: Role;
 }
