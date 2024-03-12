@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
 import { v4 as uuid } from 'uuid';
-import { Payload } from 'src/common/types/types';
+import { Payload, Tokens } from 'src/common/types/types';
+import { LoginReqDto } from './dto/login.req.dto';
+import { CustomException } from 'src/http-exception/custom-exception';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +15,37 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
   ) {}
+  async login(dto: LoginReqDto): Promise<Tokens> {
+    const user = await this.userRepository.findByEmail(dto.email);
+    if (!user) {
+      throw new CustomException(
+        'user',
+        '가입되지 않은 이메일 입니다.',
+        '가입되지 않은 이메일 입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const verifyUser = await argon2.verify(user.password, dto.password);
+
+    if (!verifyUser) {
+      throw new CustomException(
+        'user',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const payload = this.createTokenPayload(user.id);
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.createAccessToken(payload),
+      this.createRefreshToken(payload),
+    ]);
+
+    return { accessToken, refreshToken };
+  }
 
   createTokenPayload(userId: string): Payload {
     return {
