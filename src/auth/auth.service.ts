@@ -3,7 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
 import { v4 as uuid } from 'uuid';
-import { Payload, Tokens } from 'src/common/types/types';
+import {
+  AccessToken,
+  Payload,
+  RefreshToken,
+  Tokens,
+} from 'src/common/types/types';
 import { LoginReqDto } from './dto/login.req.dto';
 import { CustomException } from 'src/http-exception/custom-exception';
 import * as argon2 from 'argon2';
@@ -81,10 +86,34 @@ export class AuthService {
         'user',
         '이메일 또는 비밀번호가 일치하지 않습니다.',
         '이메일 또는 비밀번호가 일치하지 않습니다.',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.CONFLICT,
       );
     }
 
     return verifyUser;
+  }
+
+  async accessTokenRefresh(token: RefreshToken): Promise<AccessToken> {
+    const refreshToken = token.refreshToken;
+    const { exp, ...payload } = await this.jwtService.verifyAsync(
+      refreshToken,
+      {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      },
+    );
+
+    const user = await this.userRepository.findOne(payload.sub);
+    if (!user) {
+      throw new CustomException(
+        'auth',
+        '유저 존재하지 않음',
+        '유저 존재하지 않음',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const accessToken = await this.createAccessToken(payload);
+
+    return { accessToken };
   }
 }
