@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { validationSchema } from './config/validation.schema';
 import { LoggerModule } from './logger.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LoggerModule } from './logger.module';
       }),
     }),
     AuthModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
