@@ -10,19 +10,27 @@ import { UserRepository } from 'src/auth/user.repository';
 import { AuthGuard } from 'src/common/guard/auth.guard';
 import { UserModel } from 'src/auth/entities/user.entity';
 import { IssuedCouponModel } from './entities/IssuedCoupon.entity';
+import { IssuedCouponController } from './controllers/issuedCoupon.controller';
+import { IssuedCouponService } from './services/issuedCoupon.service';
+import { IssuedCouponRepository } from './repositories/issuedCoupon.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CouponModel, UserModel, IssuedCouponModel]),
   ],
-  controllers: [CouponController],
+  controllers: [CouponController, IssuedCouponController],
   providers: [
-    CouponService,
-    CouponRepository,
     JwtService,
-    UserRepository,
     AuthService,
     AuthGuard,
+
+    UserRepository,
+
+    CouponService,
+    CouponRepository,
+
+    IssuedCouponService,
+    IssuedCouponRepository,
   ],
 })
 export class PaymentModule {}
