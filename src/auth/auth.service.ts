@@ -1,26 +1,48 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
-import { UserReqDto } from './dto/user.req.dto';
-import { UserModel } from './entities/user.entity';
-import * as argon2 from 'argon2';
-import { CustomException } from 'src/http-exception/custom-exception';
+import { v4 as uuid } from 'uuid';
+import { Payload } from 'src/common/types/types';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+    private readonly userRepository: UserRepository,
+  ) {}
 
-  async createUser(dto: UserReqDto): Promise<UserModel> {
-    const user = await this.userRepository.findByEmail(dto.email);
-    if (user) {
-      throw new CustomException(
-        'user',
-        '에러메시지',
-        'api에러',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  createTokenPayload(userId: string): Payload {
+    return {
+      sub: userId,
+      iat: Math.floor(Date.now() / 1000),
+      jti: uuid(),
+    };
+  }
+  async createAccessToken(payload: Payload): Promise<string> {
+    const expiresIn = this.configService.get<string>('ACCESS_EXPIRES');
 
-    const hashedPassword = await argon2.hash(dto.password);
-    return await this.userRepository.createUser(dto, hashedPassword);
+    const key = this.configService.get<string>('JWT_SECRET');
+
+    const token = this.jwtService.sign(payload, {
+      expiresIn,
+      secret: key,
+    });
+
+    return token;
+  }
+
+  async createRefreshToken(payload: Payload): Promise<string> {
+    const expiresIn = this.configService.get<string>('REFRESH_EXPIRES');
+
+    const key = this.configService.get<string>('JWT_SECRET');
+
+    const token = this.jwtService.sign(payload, {
+      expiresIn,
+      secret: key,
+    });
+
+    return token;
   }
 }
