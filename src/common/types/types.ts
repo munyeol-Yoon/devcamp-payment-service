@@ -16,3 +16,7 @@ export type AccessToken = {
 export type RefreshToken = {
   refreshToken: string;
 };
+
+export type CouponType = 'percent' | 'fixed';
+// 'percent'; // 정률제
+//  'fixed'; // 정액제

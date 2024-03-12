@@ -1,11 +1,9 @@
-import { BaseEntity, Column } from 'typeorm';
+import { BaseModel } from 'src/common/entity/base.entity';
+import { CouponType } from 'src/common/types/types';
+import { Column, Entity } from 'typeorm';
 
-export enum CouponType {
-  percent = 'percent', // 정률제
-  fixed = 'fixed', // 정액제
-}
-
-export class CouponModel extends BaseEntity {
+@Entity('coupon')
+export class CouponModel extends BaseModel {
   @Column({
     type: 'varchar',
   })
