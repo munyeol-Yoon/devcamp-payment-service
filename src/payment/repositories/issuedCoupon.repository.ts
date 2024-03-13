@@ -11,6 +11,9 @@ export class IssuedCouponRepository {
     private readonly repository: Repository<IssuedCouponModel>,
   ) {}
 
+  // TODO - 타입 추가 필요
+  // TODO - 유효성 검증 필요 -> 이미 발급한 쿠폰인지
+
   async create(dto): Promise<IssuanceCouponResDto> {
     const issuedCoupon = this.repository.create(dto);
 
