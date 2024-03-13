@@ -21,6 +21,8 @@ export class IssuedCouponService {
     const coupon = await this.findCoupon(dto.coupon);
     const user = await this.findUser(dto.user);
 
+    await this.checkIssuedCoupon(user.id, coupon.id);
+
     const creationDto = new IssuedCouponCreationDto();
     creationDto.user = user;
     creationDto.coupon = coupon;
@@ -28,6 +30,23 @@ export class IssuedCouponService {
     creationDto.validUntil = dto.validUntil;
 
     return this.issuedCouponRepository.create(creationDto);
+  }
+
+  async checkIssuedCoupon(userId: string, couponId: string): Promise<boolean> {
+    const check = this.issuedCouponRepository.existIssuedCoupon(
+      userId,
+      couponId,
+    );
+    if (check) {
+      throw new CustomException(
+        'coupon',
+        '이미 발급된 쿠폰입니다.',
+        '이미 발급된 쿠폰입니다.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return check;
   }
 
   async findCoupon(couponId: string): Promise<CouponModel> {

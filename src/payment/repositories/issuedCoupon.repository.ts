@@ -12,8 +12,6 @@ export class IssuedCouponRepository {
     private readonly repository: Repository<IssuedCouponModel>,
   ) {}
 
-  // TODO - 유효성 검증 필요 -> 이미 발급한 쿠폰인지
-
   async create(dto: IssuedCouponCreationDto): Promise<IssuanceCouponResDto> {
     const issuedCoupon = this.repository.create(dto);
 
@@ -32,5 +30,15 @@ export class IssuedCouponRepository {
     resultDto.updatedAt = savedCoupon['updatedAt'];
 
     return resultDto;
+  }
+
+  async existIssuedCoupon(userId: string, couponId: string): Promise<boolean> {
+    const count = await this.repository.count({
+      where: {
+        user: { id: userId },
+        coupon: { id: couponId },
+      },
+    });
+    return count > 0;
   }
 }
