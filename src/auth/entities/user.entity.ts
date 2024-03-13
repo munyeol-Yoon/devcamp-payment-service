@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { BaseModel } from 'src/common/entity/base.entity';
 import { CouponModel } from 'src/payment/entities/coupon.entity';
 import { Column, Entity, OneToMany, Relation } from 'typeorm';
@@ -24,6 +25,7 @@ export class UserModel extends BaseModel {
   @Column({
     type: 'varchar',
   })
+  @Exclude()
   password: string;
 
   @Column({

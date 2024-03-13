@@ -7,6 +7,7 @@ import { CustomException } from 'src/http-exception/custom-exception';
 import { UserModel } from 'src/auth/entities/user.entity';
 import { IssuanceCouponResDto } from '../dto/issuance-coupon.res.dto';
 import { IssuanceCouponReqDto } from '../dto/issuance-coupon.req.dto';
+import { IssuedCouponCreationDto } from '../dto/Issue-coupon-creation.dto';
 
 @Injectable()
 export class IssuedCouponService {
@@ -17,10 +18,16 @@ export class IssuedCouponService {
   ) {}
 
   async create(dto: IssuanceCouponReqDto): Promise<IssuanceCouponResDto> {
-    await this.findCoupon(dto.coupon);
-    await this.findUser(dto.user);
+    const coupon = await this.findCoupon(dto.coupon);
+    const user = await this.findUser(dto.user);
 
-    return this.issuedCouponRepository.create(dto);
+    const creationDto = new IssuedCouponCreationDto();
+    creationDto.user = user;
+    creationDto.coupon = coupon;
+    creationDto.validFrom = dto.validFrom;
+    creationDto.validUntil = dto.validUntil;
+
+    return this.issuedCouponRepository.create(creationDto);
   }
 
   async findCoupon(couponId: string): Promise<CouponModel> {

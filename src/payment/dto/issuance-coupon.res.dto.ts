@@ -1,4 +1,6 @@
 import { IsBoolean, IsDate, IsNotEmpty, IsUUID } from 'class-validator';
+import { UserModel } from 'src/auth/entities/user.entity';
+import { CouponModel } from '../entities/coupon.entity';
 
 export class IssuanceCouponResDto {
   @IsUUID()
@@ -19,17 +21,17 @@ export class IssuanceCouponResDto {
   @IsNotEmpty()
   isUsed: boolean;
 
-  @IsBoolean()
+  @IsDate()
   @IsNotEmpty()
-  usedAt: boolean;
+  usedAt: Date;
 
   @IsUUID()
   @IsNotEmpty()
-  user: string; // 유저의 uuid 를 사용
+  user: UserModel; // 유저의 uuid 를 사용
 
   @IsUUID()
   @IsNotEmpty()
-  coupon: string; // 쿠폰의 uuid 을 사용
+  coupon: CouponModel; // 쿠폰의 uuid 을 사용
 
   @IsDate()
   @IsNotEmpty()

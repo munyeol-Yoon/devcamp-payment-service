@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IssuedCouponModel } from '../entities/IssuedCoupon.entity';
 import { IssuanceCouponResDto } from '../dto/issuance-coupon.res.dto';
+import { IssuedCouponCreationDto } from '../dto/Issue-coupon-creation.dto';
 
 @Injectable()
 export class IssuedCouponRepository {
@@ -11,10 +12,9 @@ export class IssuedCouponRepository {
     private readonly repository: Repository<IssuedCouponModel>,
   ) {}
 
-  // TODO - 타입 추가 필요
   // TODO - 유효성 검증 필요 -> 이미 발급한 쿠폰인지
 
-  async create(dto): Promise<IssuanceCouponResDto> {
+  async create(dto: IssuedCouponCreationDto): Promise<IssuanceCouponResDto> {
     const issuedCoupon = this.repository.create(dto);
 
     const savedCoupon = await this.repository.save(issuedCoupon);
