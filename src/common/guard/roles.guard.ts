@@ -23,7 +23,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const { headers } = context.switchToHttp().getRequest();
-    console.log(headers);
+
     if (headers.authorization?.startsWith('Bearer ')) {
       const value = headers.authorization.substring(7);
       const token = {
