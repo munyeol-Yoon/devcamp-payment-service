@@ -25,4 +25,8 @@ export class CouponRepository {
   async findOne(couponId: string): Promise<CouponModel> {
     return await this.repository.findOneBy({ id: couponId });
   }
+
+  async findAllCoupon(): Promise<CouponModel[]> {
+    return await this.repository.find();
+  }
 }

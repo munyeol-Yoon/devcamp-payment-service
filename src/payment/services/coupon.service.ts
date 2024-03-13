@@ -21,6 +21,10 @@ export class CouponService {
     return await this.couponRepository.createCoupon(coupon);
   }
 
+  async getCoupons(): Promise<CouponModel[]> {
+    return await this.couponRepository.findAllCoupon();
+  }
+
   // 중복확인 추가
   async typeCheck(type: CouponType): Promise<boolean> {
     const existType = await this.couponRepository.findByType(type);

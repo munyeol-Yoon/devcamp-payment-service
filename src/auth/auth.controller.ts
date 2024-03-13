@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { LoginReqDto } from './dto/login.req.dto';
 import { AccessToken, RefreshToken, Tokens } from 'src/common/types/types';
 import { AuthGuard } from 'src/common/guard/auth.guard';
-import { Role } from './entities/user.entity';
+import { Role, UserModel } from './entities/user.entity';
 import { RolesGuard } from 'src/common/guard/roles.guard';
 import { Roles } from 'src/common/decorator/roles.decorator';
 
@@ -59,7 +59,7 @@ export class AuthController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.admin)
   @Get('user')
-  async getUsers() {
+  async getUsers(): Promise<UserModel[]> {
     return await this.userService.getUsers();
   }
 }

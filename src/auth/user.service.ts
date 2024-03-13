@@ -5,6 +5,7 @@ import * as argon2 from 'argon2';
 import { CustomException } from 'src/http-exception/custom-exception';
 import { AuthService } from './auth.service';
 import { UserResDto } from './dto/user.res.dto';
+import { UserModel } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -43,8 +44,7 @@ export class UserService {
     return result;
   }
 
-  // TODO Join 해서 쿠폰까지 나올 수 있도록
-  async getUsers() {
+  async getUsers(): Promise<UserModel[]> {
     return this.userRepository.findAllUser();
   }
 }
