@@ -14,6 +14,7 @@ export class CouponRepository {
 
   async createCoupon(dto: CreateCouponDto): Promise<CouponModel> {
     const coupon = this.repository.create(dto);
+
     return await this.repository.save(coupon);
   }
 

@@ -9,10 +9,10 @@ import { CustomException } from 'src/http-exception/custom-exception';
 export class CouponService {
   constructor(private readonly couponRepository: CouponRepository) {}
 
-  // TODO - 쿠폰 생성시 소수점이 아닌 이상한 숫자가 들어가는 것 수정
   async createCoupon(dto: CreateCouponDto): Promise<CouponModel> {
     await this.typeCheck(dto.type);
     const value = this.couponClassification(dto.type);
+
     const coupon = {
       type: dto.type,
       value,

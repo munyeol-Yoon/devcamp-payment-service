@@ -12,7 +12,7 @@ export class CouponModel extends BaseModel {
 
   @Column({
     type: 'decimal',
-    precision: 5,
+    precision: 8,
     scale: 2,
   })
   value: number; // 얼마나 할인 되는지
