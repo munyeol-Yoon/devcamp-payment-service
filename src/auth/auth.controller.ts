@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserReqDto } from './dto/user.req.dto';
 import { UserResDto } from './dto/user.res.dto';
@@ -6,7 +14,11 @@ import { AuthService } from './auth.service';
 import { LoginReqDto } from './dto/login.req.dto';
 import { AccessToken, RefreshToken, Tokens } from 'src/common/types/types';
 import { AuthGuard } from 'src/common/guard/auth.guard';
+import { Role } from './entities/user.entity';
+import { RolesGuard } from 'src/common/guard/roles.guard';
+import { Roles } from 'src/common/decorator/roles.decorator';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -42,5 +54,12 @@ export class AuthController {
   @Get('profile')
   async profile() {
     return '가드 테스트';
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.admin)
+  @Get('user')
+  async getUsers() {
+    return await this.userService.getUsers();
   }
 }

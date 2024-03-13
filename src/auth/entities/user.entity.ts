@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { BaseModel } from 'src/common/entity/base.entity';
-import { CouponModel } from 'src/payment/entities/coupon.entity';
+import { IssuedCouponModel } from 'src/payment/entities/IssuedCoupon.entity';
 import { Column, Entity, OneToMany, Relation } from 'typeorm';
 
 export enum Role {
@@ -46,6 +46,6 @@ export class UserModel extends BaseModel {
   })
   role: Role;
 
-  @OneToMany(() => UserModel, (user) => user.id)
-  coupon: Relation<CouponModel[]>;
+  @OneToMany(() => IssuedCouponModel, (issuedCoupon) => issuedCoupon.user)
+  issuedCoupons: Relation<IssuedCouponModel[]>;
 }

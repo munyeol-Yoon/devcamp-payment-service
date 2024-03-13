@@ -27,4 +27,10 @@ export class UserRepository {
   async findOne(id: string): Promise<UserModel> {
     return await this.repository.findOneBy({ id });
   }
+
+  async findAllUser() {
+    return await this.repository.find({
+      relations: ['issuedCoupons', 'issuedCoupons.coupon'],
+    });
+  }
 }

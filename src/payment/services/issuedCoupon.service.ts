@@ -33,10 +33,11 @@ export class IssuedCouponService {
   }
 
   async checkIssuedCoupon(userId: string, couponId: string): Promise<boolean> {
-    const check = this.issuedCouponRepository.existIssuedCoupon(
+    const check = await this.issuedCouponRepository.existIssuedCoupon(
       userId,
       couponId,
     );
+
     if (check) {
       throw new CustomException(
         'coupon',

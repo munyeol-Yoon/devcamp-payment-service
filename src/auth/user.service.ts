@@ -42,4 +42,9 @@ export class UserService {
 
     return result;
   }
+
+  // TODO Join 해서 쿠폰까지 나올 수 있도록
+  async getUsers() {
+    return this.userRepository.findAllUser();
+  }
 }
