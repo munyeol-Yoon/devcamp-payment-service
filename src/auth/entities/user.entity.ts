@@ -1,7 +1,8 @@
 import { Exclude } from 'class-transformer';
 import { BaseModel } from 'src/common/entity/base.entity';
 import { IssuedCouponModel } from 'src/payment/entities/IssuedCoupon.entity';
-import { Column, Entity, OneToMany, Relation } from 'typeorm';
+import { PointModel } from 'src/payment/entities/point.entity';
+import { Column, Entity, OneToMany, OneToOne, Relation } from 'typeorm';
 
 export enum Role {
   admin = 'admin',
@@ -48,4 +49,7 @@ export class UserModel extends BaseModel {
 
   @OneToMany(() => IssuedCouponModel, (issuedCoupon) => issuedCoupon.user)
   issuedCoupons: Relation<IssuedCouponModel[]>;
+
+  @OneToOne(() => PointModel, (point) => point.user)
+  point: Relation<PointModel>;
 }

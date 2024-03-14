@@ -13,10 +13,16 @@ import { IssuedCouponModel } from './entities/IssuedCoupon.entity';
 import { IssuedCouponController } from './controllers/issuedCoupon.controller';
 import { IssuedCouponService } from './services/issuedCoupon.service';
 import { IssuedCouponRepository } from './repositories/issuedCoupon.repository';
+import { PointModel } from './entities/point.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CouponModel, UserModel, IssuedCouponModel]),
+    TypeOrmModule.forFeature([
+      CouponModel,
+      UserModel,
+      IssuedCouponModel,
+      PointModel,
+    ]),
   ],
   controllers: [CouponController, IssuedCouponController],
   providers: [
