@@ -15,14 +15,14 @@ export class IssuedCouponModel extends BaseModel {
   // 쿠폰 유효 시작일
   @Column({
     type: 'timestamp',
-    default: false,
+    default: null,
   })
   validFrom: Date;
 
   // 쿠폰 유효 만료일
   @Column({
     type: 'timestamp',
-    default: false,
+    default: null,
   })
   validUntil: Date;
 
