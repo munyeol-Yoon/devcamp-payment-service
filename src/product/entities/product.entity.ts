@@ -1,9 +1,10 @@
-import { BaseEntity, Column, Entity } from 'typeorm';
+import { BaseModel } from 'src/common/entity/base.entity';
+import { Column, Entity } from 'typeorm';
 
 export type ProductStatus = 'available' | 'out-of-stock';
 
 @Entity('product')
-export class ProductModel extends BaseEntity {
+export class ProductModel extends BaseModel {
   @Column({
     type: 'varchar',
   })
