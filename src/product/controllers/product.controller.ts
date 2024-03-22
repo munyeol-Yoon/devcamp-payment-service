@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Post,
   UseGuards,
   UseInterceptors,
@@ -13,6 +14,7 @@ import { RolesGuard } from 'src/common/guard/roles.guard';
 import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/auth/entities/user.entity';
 import { ProductResDto } from '../dto/product.res.dto';
+import { ProductModel } from '../entities/product.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard, RolesGuard)
@@ -24,5 +26,10 @@ export class ProductController {
   @Post()
   async createProduct(@Body() body: ProductReqDto): Promise<ProductResDto> {
     return this.productService.createProduct(body);
+  }
+
+  @Get()
+  async getAllProduct(): Promise<ProductModel[]> {
+    return this.productService.getAllProduct();
   }
 }

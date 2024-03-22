@@ -16,4 +16,8 @@ export class ProductRepository {
     const product = this.repository.create(dto);
     return await this.repository.save(product);
   }
+
+  async findAll(): Promise<ProductModel[]> {
+    return await this.repository.find();
+  }
 }
