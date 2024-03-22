@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { validationSchema } from './config/validation.schema';
 import { LoggerModule } from './logger.module';
 import { PaymentModule } from './payment/payment.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PaymentModule } from './payment/payment.module';
     }),
     AuthModule,
     PaymentModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
