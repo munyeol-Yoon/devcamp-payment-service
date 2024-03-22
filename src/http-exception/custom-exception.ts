@@ -1,7 +1,14 @@
 import { HttpStatus } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
-export type Domain = 'user' | 'generic' | 'pipe' | 'auth' | 'coupon' | 'role';
+export type Domain =
+  | 'user'
+  | 'generic'
+  | 'pipe'
+  | 'auth'
+  | 'coupon'
+  | 'role'
+  | 'product';
 
 export class CustomException extends Error {
   public readonly id: string;

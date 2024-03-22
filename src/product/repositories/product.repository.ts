@@ -21,7 +21,11 @@ export class ProductRepository {
     return await this.repository.find();
   }
 
-  async findOne(id: string): Promise<ProductResDto> {
+  async findOne(id: string): Promise<ProductModel> {
     return await this.repository.findOneBy({ id });
+  }
+
+  async updateProduct(product: ProductModel): Promise<ProductModel> {
+    return await this.repository.save(product);
   }
 }

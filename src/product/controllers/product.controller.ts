@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -16,6 +17,7 @@ import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/auth/entities/user.entity';
 import { ProductResDto } from '../dto/product.res.dto';
 import { ProductModel } from '../entities/product.entity';
+import { ProductUpdateReqDto } from '../dto/product-update.req.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard, RolesGuard)
@@ -37,5 +39,13 @@ export class ProductController {
   @Get('/:id')
   async getProduct(@Param('id') id: string): Promise<ProductResDto> {
     return this.productService.getProduct(id);
+  }
+
+  @Patch('/:id')
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() body: ProductUpdateReqDto,
+  ): Promise<ProductModel> {
+    return this.productService.updateProduct(id, body);
   }
 }
