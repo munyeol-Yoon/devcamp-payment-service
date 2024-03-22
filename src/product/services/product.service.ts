@@ -15,4 +15,8 @@ export class ProductService {
   async getAllProduct(): Promise<ProductModel[]> {
     return this.productRepository.findAll();
   }
+
+  async getProduct(id: string): Promise<ProductResDto> {
+    return this.productRepository.findOne(id);
+  }
 }

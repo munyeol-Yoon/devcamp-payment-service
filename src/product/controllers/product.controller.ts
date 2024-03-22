@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Param,
   Post,
   UseGuards,
   UseInterceptors,
@@ -31,5 +32,10 @@ export class ProductController {
   @Get()
   async getAllProduct(): Promise<ProductModel[]> {
     return this.productService.getAllProduct();
+  }
+
+  @Get('/:id')
+  async getProduct(@Param('id') id: string): Promise<ProductResDto> {
+    return this.productService.getProduct(id);
   }
 }

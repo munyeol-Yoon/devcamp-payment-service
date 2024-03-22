@@ -20,4 +20,8 @@ export class ProductRepository {
   async findAll(): Promise<ProductModel[]> {
     return await this.repository.find();
   }
+
+  async findOne(id: string): Promise<ProductResDto> {
+    return await this.repository.findOneBy({ id });
+  }
 }
