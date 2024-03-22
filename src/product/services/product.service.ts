@@ -34,7 +34,7 @@ export class ProductService {
     // Object.assign : 객체의 속성을 합치거나 기존 객체를 기반으로 새 객체를 생성할 때 활용
     Object.assign(product, dto);
 
-    return this.productRepository.updateProduct(product);
+    return this.productRepository.updateProduct(id, product);
   }
 
   async deleteProduct(id: string): Promise<Message> {

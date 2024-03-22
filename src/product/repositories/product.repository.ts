@@ -27,8 +27,27 @@ export class ProductRepository {
     return await this.repository.findOneBy({ id });
   }
 
-  async updateProduct(product: ProductModel): Promise<ProductModel> {
-    return await this.repository.save(product);
+  /**
+   * save()
+   *
+   * id 가 포함된 엔티티를 저장할 때 먼저 select 를 이용해 id 로 조회한 뒤에,
+   * 레코드가 존재하면 변경된 컬럼에 대해 update 쿼리를 수행한다.
+   * select 발생
+   * 전체 엔티티를 한번에 업데이트할 때 사용한다.
+   *
+   * update()
+   *
+   * 부분적으로 업데이트할 때 사용한다. select 는 발생하지 않는다.
+   * Patch 에 적합
+   */
+  async updateProduct(
+    id: string,
+    product: ProductModel,
+  ): Promise<ProductModel> {
+    await this.repository.update({ id }, product);
+
+    const result = this.findOne(id);
+    return result;
   }
 
   async deleteOne(id: string): Promise<Message> {
