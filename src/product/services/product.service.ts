@@ -5,6 +5,7 @@ import { ProductResDto } from '../dto/product.res.dto';
 import { ProductModel } from '../entities/product.entity';
 import { ProductUpdateReqDto } from '../dto/product-update.req.dto';
 import { CustomException } from 'src/http-exception/custom-exception';
+import { Message } from 'src/common/types/types';
 
 @Injectable()
 export class ProductService {
@@ -34,6 +35,12 @@ export class ProductService {
     Object.assign(product, dto);
 
     return this.productRepository.updateProduct(product);
+  }
+
+  async deleteProduct(id: string): Promise<Message> {
+    await this.existProduct(id);
+
+    return this.productRepository.deleteOne(id);
   }
 
   async existProduct(id: string): Promise<ProductModel> {

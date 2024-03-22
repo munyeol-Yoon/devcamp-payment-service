@@ -20,3 +20,7 @@ export type RefreshToken = {
 export type CouponType = 'percent' | 'fixed';
 // 'percent'; // 정률제
 //  'fixed'; // 정액제
+
+export type Message = {
+  message: string;
+};

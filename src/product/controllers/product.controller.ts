@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -18,6 +19,7 @@ import { Role } from 'src/auth/entities/user.entity';
 import { ProductResDto } from '../dto/product.res.dto';
 import { ProductModel } from '../entities/product.entity';
 import { ProductUpdateReqDto } from '../dto/product-update.req.dto';
+import { Message } from 'src/common/types/types';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard, RolesGuard)
@@ -47,5 +49,10 @@ export class ProductController {
     @Body() body: ProductUpdateReqDto,
   ): Promise<ProductModel> {
     return this.productService.updateProduct(id, body);
+  }
+
+  @Delete('/:id')
+  async deleteProduct(@Param('id') id: string): Promise<Message> {
+    return this.productService.deleteProduct(id);
   }
 }
